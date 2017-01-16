@@ -1,7 +1,8 @@
 \name{OutlierDC-package}
+\Rdversion{1.1}
+\docType{package}
 \alias{OutlierDC}
 \alias{OutlierDC-package}
-\docType{package}
 \title{
 	Functions for detecting outlying observations in the analysis of censored data, especially with an application to lifetime studies.
 }
@@ -40,3 +41,4 @@ Nardi, A., and Schemper, M. (1999). New residuals for cox regression and their a
     \code{\link{odc}}, \code{\link{plot}}, \code{\link{coef}}, \code{\link{show}}, \code{\link[quantreg:crq]{quantreg}}
 }
 \keyword{ package }
+%end

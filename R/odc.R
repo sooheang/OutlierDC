@@ -24,13 +24,13 @@ odc <- function(formula, data,
   reg <- match.arg(reg)
   fence <- match.arg(fence)
 
-  if(!is.Formula(formula)) formula <- Formula::Formula(formula)
+  if(!Formula::is.Formula(formula)) formula <- Formula::Formula(formula)
 
 	if(is.data.frame(data)) data <- as.data.frame(data)
 
-	mf1 = Formula::model.frame(formula, data = data)
-	X.mat = Formula::model.matrix(formula, data = mf1)
-	resp = Formula::model.response(mf1)
+	mf1 = stats::model.frame(formula, data = data)
+	X.mat = stats::model.matrix(formula, data = mf1)
+	resp = stats::model.response(mf1)
 
 	y = resp[,1]
 	status = resp[,2]
@@ -41,7 +41,7 @@ odc <- function(formula, data,
 	# cat("Please wait... \n")
 	betas = matrix(NA, nrow = ncol(X.mat), ncol = 7)
 
-	result = new("OutlierDC")
+	result = methods::new("OutlierDC")
 	result@call <- call
 	result@formula <- formula
 
@@ -55,14 +55,14 @@ odc <- function(formula, data,
   	betas[,6] <- LCRQ(y = y, x = X.mat[ ,-1, drop = FALSE], delta = status, tau = .90, h= h)
   	betas[,7] <- LCRQ(y = y, x = X.mat[ ,-1, drop = FALSE], delta = status, tau = .95, h= h)
 	} else if (reg %in% c("Portnoy", "PengHuang")) {
-		fit = quantreg::crq(formula, data = data, method = reg)
-  	betas[,1] <- quantreg::coef(fit, taus = .05)
-  	betas[,2] <- quantreg::coef(fit, taus = .10)
-  	betas[,3] <- quantreg::coef(fit, taus = .25)
-		betas[,4] <- quantreg::coef(fit, taus = .50)
-  	betas[,5] <- quantreg::coef(fit, taus = .75)
-  	betas[,6] <- quantreg::coef(fit, taus = .90)
-  	betas[,7] <- quantreg::coef(fit, taus = .95)
+		fit = crq(formula, data = data, method = reg)
+  	betas[,1] <- coef(fit, taus = .05)
+  	betas[,2] <- coef(fit, taus = .10)
+  	betas[,3] <- coef(fit, taus = .25)
+		betas[,4] <- coef(fit, taus = .50)
+  	betas[,5] <- coef(fit, taus = .75)
+  	betas[,6] <- coef(fit, taus = .90)
+  	betas[,7] <- coef(fit, taus = .95)
 	} 
 
 	fit.q05 = (X.mat %*% betas[,1])[,1]
@@ -143,7 +143,7 @@ odc <- function(formula, data,
 
   	res.fit = y - fit.q50
   	#score <- score
-  	cutoff = median(abs(res.fit) / qnorm(0.75), na.rm = TRUE)
+  	cutoff = stats::median(abs(res.fit) / stats::qnorm(0.75), na.rm = TRUE)
 
   	if (fence == "both") {
   		outlier <- abs(res.fit) > (kr * cutoff)

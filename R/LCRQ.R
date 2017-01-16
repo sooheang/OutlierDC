@@ -96,7 +96,7 @@ LCRQ <- function(y, x, delta, tau, h, kernel.type = "4th"){
         ww = w
     }
     
-    rq1 = rq(yy~xx, weights=ww, tau=tau)
+    rq1 = quantreg::rq(yy~xx, weights=ww, tau=tau)
     result<-rq1$coeff
     result    
 }

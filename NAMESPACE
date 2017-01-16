@@ -1,9 +1,12 @@
-importFrom(graphics, plot)
-#importFrom(survival, Surv)
-importFrom(quantreg, crq, coef)
-importFrom(Formula, Formula, model.frame, model.matrix, model.response)
+importFrom("methods", "new", "show")
+importFrom("graphics", "plot", "grid", "points", "abline", "legend", "lines", "axis", "box", "rug")
+importFrom("utils", "head", "tail")
+importFrom("survival", "Surv")
+importFrom("stats", "formula", "quantile", "sd", "model.frame", "model.matrix", "model.response", "median", "qnorm", "qqnorm", "qqline")
+importFrom("quantreg", "crq", "rq")
+importFrom("Formula", "Formula", "is.Formula")
 
 ## S4 class
-export(odc, JaB, bodc) #exporting methods implicitly exports the generics
-exportClasses(OutlierDC)
-exportMethods(show, plot, coef, update) 
+export("odc", "JaB", "bodc") #exporting methods implicitly exports the generics
+exportClasses("OutlierDC")
+exportMethods("show", "plot", "coef", "update") 

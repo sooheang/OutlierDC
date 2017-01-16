@@ -43,7 +43,7 @@ bodc <- function(object, B = 500, q = 0.05, fence = c("UB", "LB", "both")){
 	for(j in 1:B){
 		# Extend the JaB sample for other detection algorithms
 		fit.tmp = odc(
-		  formula = formula(object@formula), 
+		  formula = stats::formula(object@formula), 
 		  data = data[boot.index[,j],], 
 		  alg = "score", 
 		  reg = reg)
@@ -52,13 +52,13 @@ bodc <- function(object, B = 500, q = 0.05, fence = c("UB", "LB", "both")){
 			# to avoid quantile-crossing problem
 			score.tmp = fit.tmp@score
 			score.tmp <- score.tmp[!(score.tmp %in% c(NA, NaN, Inf, -Inf))]
-			boot.dist[j] <- sd(score.tmp) 
+			boot.dist[j] <- stats::sd(score.tmp) 
 		} 
 	}
 
 	#object@upper <- quantile(boot.dist, 0.01)
 	#s.diff.out = which(s.diff > object@upper)
-	object@ks <- quantile(boot.dist, q, na.rm = TRUE)
+	object@ks <- stats::quantile(boot.dist, q, na.rm = TRUE)
 	
 	# step 2. declare outliers
 	if(fence %in% c("UB", "both")){
@@ -134,7 +134,11 @@ JaB <- function(object, B = 1000, alpha = 0.05, fence = c("UB", "LB", "both")){
 	# NOTICE ME: have to reduce computational cost by using vectorized-computation
 	for(j in 1:B){
 		# Extend the JaB sample for other detection algorithms
-		fit.tmp = odc(formula = formula(object@formula), data = data[boot.index[,j],], alg = "score", reg = reg)
+		fit.tmp = odc(formula = stats::formula(object@formula), 
+		              data = data[boot.index[,j],], 
+		              alg = "score", 
+		              reg = reg)
+		
 		if(all(fit.tmp@fitted.mat[,3] <= fit.tmp@fitted.mat[,5])){
 			# avoid quantile-crossing problem
 			score.boot[,j] <- fit.tmp@score
@@ -149,19 +153,19 @@ JaB <- function(object, B = 1000, alpha = 0.05, fence = c("UB", "LB", "both")){
 		ind.dist <- ind.dist[!(ind.dist %in% c(Inf, -Inf, NA, NaN))]
 		#ind.dist <- na.omit(ind.dist)
 		if(fence == "UB"){
-			scores.cri[i,3] <- quantile(ind.dist, 1 - alpha)
+			scores.cri[i,3] <- stats::quantile(ind.dist, 1 - alpha)
 			scores.cri[i,4] <- scores.cri[i,1] >= scores.cri[i,3]
 		} else if(fence == "LB"){
-			scores.cri[i,2] <- quantile(ind.dist, alpha, na.rm = TRUE)
+			scores.cri[i,2] <- stats::quantile(ind.dist, alpha, na.rm = TRUE)
 			scores.cri[i,4] <- object@score[i] <= scores.cri[i,2]
 			#print(scores.cri[i,])
 		} else if(fence == "both"){
-			scores.cri[i,2] <- quantile(ind.dist, alpha / 2, na.rm = TRUE)
-			scores.cri[i,3] <- quantile(ind.dist, 1 - alpha / 2, na.rm = TRUE)
+			scores.cri[i,2] <- stats::quantile(ind.dist, alpha / 2, na.rm = TRUE)
+			scores.cri[i,3] <- stats::quantile(ind.dist, 1 - alpha / 2, na.rm = TRUE)
 			scores.cri[i,4] <- object@score[i] < scores.cri[i,2] | object@score[i] > scores.cri[i,3]
 		}
 
-		scores.cri[i,5] <- quantile(ind.dist, ifelse(i == 1, i / (n - 1), 
+		scores.cri[i,5] <- stats::quantile(ind.dist, ifelse(i == 1, i / (n - 1), 
 				ifelse(i == n, i / (n+1), (i - 1) / (n -1) )), na.rm = TRUE)
 	}
 
@@ -209,11 +213,11 @@ setMethod("show", "OutlierDC", function(object){
 		)
 		cat(paste(" (",object@reg,")", sep = ""),"\n")
 
-		mf1 <- Formula::model.frame(object@formula, data = object@raw.data)
-		resp <- Formula::model.response(mf1)
+		mf1 <- stats::model.frame(object@formula, data = object@raw.data)
+		resp <- stats::model.response(mf1)
 		times = resp[ ,1]
 		delta = resp[ ,2]
-		X = Formula::model.matrix(object@formula, data = object@raw.data)
+		X = stats::model.matrix(object@formula, data = object@raw.data)
 		n = length(times)
 
 		cat(" # of outliers detected: ", object@n.outliers, "\n")
@@ -249,7 +253,7 @@ setMethod("show", "OutlierDC", function(object){
 
 			if(object@fence %in% c("both", "UB")){
 				cat("\n Outliers detected:\n")
-				print.head <- head(print.data)
+				print.head <- utils::head(print.data)
 				print(print.head)
 				cat("\n", nrow(print.head) ,"of all", object@n.outliers, "outliers were displayed. \n")
 			}
@@ -257,7 +261,7 @@ setMethod("show", "OutlierDC", function(object){
 			if(object@fence %in% c("both", "LB")){
 				cat("\n Outliers detected by lower fence:\n")
 				#print(print.data[n:(n-5),], digits = 3)
-				print(tail(print.data))
+				print(utils::tail(print.data))
 			}
 		} else if(object@alg == "boxplot"){
 			cat("\n Outliers detected:\n")
@@ -292,13 +296,13 @@ setMethod("show", "OutlierDC", function(object){
 
 			if(object@fence %in% c("both", "UB")){
 				cat("\n Top 6 outlying scores:\n")
-				print(head(print.data))
+				print(utils::head(print.data))
 			}
 			
 			if(object@fence %in% c("both", "LB")){
 				cat("\n Bottom 6 outlying scores:\n")
 				#print(print.data[n:(n-5),], digits = 3)
-				print(tail(print.data))
+				print(utils::tail(print.data))
 			}						
 		} 
 	}
@@ -307,8 +311,8 @@ setMethod("show", "OutlierDC", function(object){
 ####################################################################
 setGeneric("plot")
 setMethod("plot", "OutlierDC", function(x, y = NA, ...){
-		mf1 <- model.frame(x@formula, x@raw.data)
-		resp <- model.response(mf1)
+		mf1 <- stats::model.frame(x@formula, x@raw.data)
+		resp <- stats::model.response(mf1)
 		Times <- resp[ ,1]
 		status <- resp[ ,2]
 
@@ -317,11 +321,11 @@ setMethod("plot", "OutlierDC", function(x, y = NA, ...){
 			Fitted.values = x@fitted.mat[ ,4]
 			limit.y <- max(Residuals, abs(x@kr) * x@cutoff)
 			plot(Fitted.values, Residuals,pch = c(1,3)[status+1], ylim = c(-1 * limit.y, limit.y), ...)
-			grid()
-			points(Fitted.values[x@outliers], Residuals[x@outliers], pch = c(1,3)[status[x@outliers]+1], col = "blue")
-			if(x@fence %in% c("both", "UB")) abline(h = x@kr * x@cutoff, col = "blue", lty = 2, lwd = 1.5)
-			if(x@fence %in% c("both", "LB")) abline(h = -1 * x@kr * x@cutoff, col = "blue", lty = 2, lwd = 1.5)
-			legend("bottomleft",c("Censored","Event"), cex=1, pch=c(1,3), bty = "n")
+			graphics::grid()
+			graphics::points(Fitted.values[x@outliers], Residuals[x@outliers], pch = c(1,3)[status[x@outliers]+1], col = "blue")
+			if(x@fence %in% c("both", "UB")) graphics::abline(h = x@kr * x@cutoff, col = "blue", lty = 2, lwd = 1.5)
+			if(x@fence %in% c("both", "LB")) graphics::abline(h = -1 * x@kr * x@cutoff, col = "blue", lty = 2, lwd = 1.5)
+			graphics::legend("bottomleft",c("Censored","Event"), cex=1, pch=c(1,3), bty = "n")
 		}
 		else if(x@alg == "score"){
 			Scores = x@score
@@ -341,39 +345,39 @@ setMethod("plot", "OutlierDC", function(x, y = NA, ...){
 				#abline(c(0,1), col = "blue", lwd = 1.25, lty = 2)
 			} else{
 				# normal Q-Q plot of outlying scores
-				tmp <- qqnorm(Scores, main = "Q-Q plot of outlying scores", pch = c(1,3)[status+1])
-				qqline(Scores, col = "tomato", lwd = 1.5)
+				tmp <- stats::qqnorm(Scores, main = "Q-Q plot of outlying scores", pch = c(1,3)[status+1])
+				stats::qqline(Scores, col = "tomato", lwd = 1.5)
 				#grid()
-				if(!is.logical(x@upper)) abline(h = x@upper, col = "blue", lwd = 2, lty = 2)
-				if(!is.logical(x@lower)) abline(h = x@lower, col = "blue", lwd = 2, lty = 2)
+				if(!is.logical(x@upper)) graphics::abline(h = x@upper, col = "blue", lwd = 2, lty = 2)
+				if(!is.logical(x@lower)) graphics::abline(h = x@lower, col = "blue", lwd = 2, lty = 2)
 
-				points(tmp$x[x@outliers], tmp$y[x@outliers], col = "red", pch = c(1,3)[status[x@outliers]+1])
-				legend("bottomright",c("Censored","Event"), cex=1, pch=c(1,3), bty = "n")
+				graphics::points(tmp$x[x@outliers], tmp$y[x@outliers], col = "red", pch = c(1,3)[status[x@outliers]+1])
+				graphics::legend("bottomright",c("Censored","Event"), cex=1, pch=c(1,3), bty = "n")
 			}
 		}
 		else if(x@alg == "boxplot"){
-			cov.x <- model.matrix(x@formula, data = x@raw.data)
+			cov.x <- stats::model.matrix(x@formula, data = x@raw.data)
 			n <- ncol(cov.x) - 1
 			for(i in 1:n){
 				covariate <- cov.x[ ,i+1]
 				order <- order(covariate)
-				plot(covariate, Times, pch = c(1,3)[status+1], axes=F, ...)
-				points(covariate[x@outliers], Times[x@outliers], pch =  c(1,3)[status[x@outliers]+1], col = "blue")
+				graphics::plot(covariate, Times, pch = c(1,3)[status+1], axes=F, ...)
+				graphics::points(covariate[x@outliers], Times[x@outliers], pch =  c(1,3)[status[x@outliers]+1], col = "blue")
 				
 				if(x@fence %in% c("both", "UB")){
-				lines(covariate[order], x@fitted.mat[order,5], lwd = 1.5,lty = 3)
-				lines(covariate[order], x@upper[order], col = "blue", lwd = 1.5,lty = 2)
+				  graphics::lines(covariate[order], x@fitted.mat[order,5], lwd = 1.5,lty = 3)
+				  graphics::lines(covariate[order], x@upper[order], col = "blue", lwd = 1.5,lty = 2)
 				}
-				lines(covariate[order], x@fitted.mat[order,4], lwd = 1.5)
+				graphics::lines(covariate[order], x@fitted.mat[order,4], lwd = 1.5)
 				if(x@fence %in% c("both", "LB")){
-				lines(covariate[order], x@fitted.mat[order,3], lwd = 1.5,lty = 3)
-				lines(covariate[order], x@lower[order], col = "blue", lwd = 1.5,lty = 2)
+  				graphics::lines(covariate[order], x@fitted.mat[order,3], lwd = 1.5,lty = 3)
+	  			graphics::lines(covariate[order], x@lower[order], col = "blue", lwd = 1.5,lty = 2)
 				}
-				axis(1)
-				axis(2, at= round(quantile(Times, probs = 0:5/5),1), labels= round(quantile(Times, probs = 0:5/5),1))
-				box()
-				rug(jitter(cov.x[order], amount = 0.01), ticksize = 0.01)
-				legend("topright",c("Censored","Event"), cex=1, pch=c(1,3), bty = "n")
+				graphics::axis(1)
+				graphics::axis(2, at= round(quantile(Times, probs = 0:5/5),1), labels= round(quantile(Times, probs = 0:5/5),1))
+				graphics::box()
+				graphics::rug(jitter(cov.x[order], amount = 0.01), ticksize = 0.01)
+				graphics::legend("topright",c("Censored","Event"), cex=1, pch=c(1,3), bty = "n")
 			}
 		}
 	}
@@ -386,7 +390,7 @@ setMethod("coef", "OutlierDC", function(object) round(object@coefficients,3) )
 ####################################################################
 setGeneric("summary")
 setMethod("summary","OutlierDC", function(object, taus = c(.1, .25, .5, .75, .9)){
-		fit <- crq(object@formula, data = object@raw.data, method = object@alg)
+		fit <- quantreg::crq(object@formula, data = object@raw.data, method = object@alg)
 		summary(fit, taus = taus)
 	}
 )
@@ -416,8 +420,8 @@ setMethod("update","OutlierDC", function(object, alpha = 0.01, ks = NA, LB = NA)
 			object@lower <- LB
 		}
 		else{
-			mf1 <- model.frame(object@formula, data = object@raw.data)
-			resp <- model.response(mf1)
+			mf1 <- stats::model.frame(object@formula, data = object@raw.data)
+			resp <- stats::model.response(mf1)
 			times = resp[,1]
 		
 			object@outliers <- ifelse(times > object@fitted.mat[,4],
@@ -453,15 +457,15 @@ setMethod("update","OutlierDC", function(object, alpha = 0.01, ks = NA, LB = NA)
 			ind.dist <- ind.dist[!(ind.dist %in% c(Inf, -Inf, NA))]
 		
 			if(object@fence == "UB"){
-				scores.cri[i,3] <- quantile(ind.dist, 1 - alpha, na.rm = TRUE)
+				scores.cri[i,3] <- stats::quantile(ind.dist, 1 - alpha, na.rm = TRUE)
 				scores.cri[i,4] <- scores.cri[i,1] >= scores.cri[i,3]
 				#print(scores.cri[i,])
 			} else if(object@fence == "LB"){
-				scores.cri[i,2] <- quantile(ind.dist, alpha, na.rm = TRUE)
+				scores.cri[i,2] <- stats::quantile(ind.dist, alpha, na.rm = TRUE)
 				scores.cri[i,4] <- object@score[i] <= scores.cri[i,2]
 			} else if(object@fence == "both"){
-				scores.cri[i,2] <- quantile(ind.dist, alpha / 2, na.rm = TRUE)
-				scores.cri[i,3] <- quantile(ind.dist, 1 - alpha / 2, na.rm = TRUE)
+				scores.cri[i,2] <- stats::quantile(ind.dist, alpha / 2, na.rm = TRUE)
+				scores.cri[i,3] <- stats::quantile(ind.dist, 1 - alpha / 2, na.rm = TRUE)
 				scores.cri[i,4] <- object@score[i] < scores.cri[i,2] | object@score[i] > scores.cri[i,3]
 			}
 		}
@@ -488,4 +492,4 @@ setMethod("update","OutlierDC", function(object, alpha = 0.01, ks = NA, LB = NA)
 )
 # End of subfunctions()
 # Oct 10, 2014 by Soo-Heang EO
-
+# Arrange NAMESPACE @ Jan 16, 2017 by Soo-Heang EO
