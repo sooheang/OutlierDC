@@ -1,0 +1,9 @@
+importFrom(graphics, plot)
+#importFrom(survival, Surv)
+importFrom(quantreg, crq, coef)
+importFrom(Formula, Formula, model.frame, model.matrix, model.response)
+
+## S4 class
+export(odc, JaB, bodc) #exporting methods implicitly exports the generics
+exportClasses(OutlierDC)
+exportMethods(show, plot, coef, update) 
