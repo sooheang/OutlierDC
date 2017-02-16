@@ -1,0 +1,36 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## OutlierDC: 
+### Identification of Outlying Observations in Censored Data
+
+[![Build Status](https://travis-ci.org/sooheang/OutlierDC.svg?branch=master)](https://travis-ci.org/sooheang/OutlierDC)
+[![Build status](https://ci.appveyor.com/api/projects/status/x7frit6xwy688d5e/branch/master?svg=true)](https://ci.appveyor.com/project/sooheang/OutlierDC/branch/master)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/OutlierDC)](http://cran.r-project.org/package=OutlierDC)
+[![Coverage Status](https://img.shields.io/codecov/c/github/sooheang/OutlierDC/master.svg)](https://codecov.io/github/sooheang/OutlierDC?branch=master)
+[![CRAN_Downloads](https://cranlogs.r-pkg.org/badges/grand-total/OutlierDC)](http://cran.rstudio.com/web/packages/OutlierDC/index.html)
+
+
+
+
+You can install:
+
+* the latest released version from CRAN with
+
+    ```R
+    install.packages("OutlierDC")
+    ````
+
+* the latest development version from github with
+
+    ```R
+    if (packageVersion("devtools") < 1.6) {
+      install.packages("devtools")
+    }
+    devtools::install_github("sooheang/OutlierDC")
+    ```
