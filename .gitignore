@@ -1,3 +1,8 @@
+# yml files
+.yml
+
+# R markdown fild
+.Rmd
 # History files
 .Rhistory
 .Rapp.history

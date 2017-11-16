@@ -1,14 +1,26 @@
 Package: OutlierDC
 Title: Outlier Detection for Censored Data
-Date: 2017-01-18
-Version: 1.1.0
+Date: 2017-11-16
+Version: 1.1.2
+Description: Algorithms for the identification of outlying observations for the analysis of censored data.
 Authors@R: c(person(given = "Soo-Heang", family = "Eo", role = c("aut","cre"), email = "eo.sooheang@gmail.com"),
 			person(given = "Huixia Judy", family = "Wang", role = "ctb"),
 			person(given = "Lan", family = "Wang", role = "ctb"),
       person(given = "HyungJun", family = "Cho", role = "aut", email = "hj4cho@korea.ac.kr")
       )
-Description: This package contains some algorithms for the identification of outlying observations in the analysis of censored data.
-Depends: R (>= 3.3.0), survival (>= 2.37-5) 
-Imports: methods, graphics, stats, utils, quantreg, Formula 
+URL: https://github.com/sooheang/OutlierDC
+BugReports: https://github.com/sooheang/OutlierDC/issues
+Encoding: UTF-8
+Depends: 
+  R (>= 3.3.0), 
+  survival (>= 2.37-5) 
+Imports: 
+  methods, 
+  graphics, 
+  stats, 
+  utils, 
+  quantreg, 
+  Formula 
 Maintainer: Soo-Heang Eo <eo.sooheang@gmail.com>
+VignetteBuilder: knitr
 License: GPL-3

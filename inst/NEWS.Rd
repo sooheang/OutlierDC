@@ -4,6 +4,13 @@
 \encoding{UTF-8}
 
 % ---------------------------------------------------------------------------- %
+\section{Changes in version 1.1.1 2017-10-30}{
+  \itemize{
+    \item Arrange NAMESPACE
+  }
+}
+
+% ---------------------------------------------------------------------------- %
 \section{Changes in version 1.1.0 2017-01-18}{
   \itemize{
     \item Arrange NAMESPACE
