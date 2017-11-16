@@ -4,6 +4,14 @@
 \encoding{UTF-8}
 
 % ---------------------------------------------------------------------------- %
+\section{Changes in version 1.2.0 2017-11-16}{
+  \itemize{
+    \item Add github information
+    \item 
+  }
+}
+
+% ---------------------------------------------------------------------------- %
 \section{Changes in version 1.1.1 2017-10-30}{
   \itemize{
     \item Arrange NAMESPACE

@@ -4,20 +4,27 @@
 # see the wiki:
 #   https://github.com/craigcitro/r-travis/wiki
 
-language: c
+language: r
+r:
+  - oldrel
+  - release
+  - devel
+pandoc_version: 1.16
+sudo: false
+cache: packages
 
 before_install:
-  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-  - chmod 755 ./travis-tool.sh
-  - ./travis-tool.sh bootstrap
+  - tlmgr install index
+
 install:
-  - ./travis-tool.sh install_deps
-script: ./travis-tool.sh run_tests
+- R -e 'devtools::install_deps(dep = T)'
 
-after_failure:
-  - ./travis-tool.sh dump_logs
+Imports: 
+- survival
+- quantreg
+- Formula
 
-notifications:
-  email:
-    on_success: change
-    on_failure: change
+script:
+- R CMD build .
+- R CMD check *tar.gz
+
