@@ -5,18 +5,14 @@
 #   https://github.com/craigcitro/r-travis/wiki
 
 language: r
-cache:
-  packages: true
+sudo: false
+install:
+  - R -e "0" --args --bootstrap-packrat
+cache: packages
 
 repos:
   CRAN: https://cloud.r-project.org
-  
-#env
-env:
-  global:
-  - _R_CHECK_FORCE_SUGGESTS_=false
-  - MAKEFLAGS="-j 2"
-  
+ 
 include:
   - r: release
   - r: oldrel 
@@ -30,9 +26,6 @@ r_packages:
 before_install:
   - mkdir -p ~/.R; echo 'PKG_CXXFLAGS := ${PKG_CXXFLAGS} -Wall -Wextra -pedantic -Werror' > ~/.R/Makevars
 
-install:
-  - R -e "0" --args --bootstrap-packrat
-  
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
