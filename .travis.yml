@@ -5,10 +5,16 @@
 #   https://github.com/craigcitro/r-travis/wiki
 
 language: r
-sudo: false
-cache: packages
 latex: false
+cache:
+  directories:
+    - $TRAVIS_BUILD_DIR/packrat/src
+    - $TRAVIS_BUILD_DIR/packrat/lib
+  packages: true
 
+repos:
+  CRAN: https://cloud.r-project.org
+  
 #env
 env:
   global:
