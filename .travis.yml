@@ -5,11 +5,7 @@
 #   https://github.com/craigcitro/r-travis/wiki
 
 language: r
-sudo: false
 cache:
-  directories:
-    - $TRAVIS_BUILD_DIR/packrat/src
-    - $TRAVIS_BUILD_DIR/packrat/lib
   packages: true
 
 repos:
@@ -30,7 +26,6 @@ r_packages:
   - survival
   - quantreg
   - Formula
-  - knitr
 
 before_install:
   - mkdir -p ~/.R; echo 'PKG_CXXFLAGS := ${PKG_CXXFLAGS} -Wall -Wextra -pedantic -Werror' > ~/.R/Makevars
