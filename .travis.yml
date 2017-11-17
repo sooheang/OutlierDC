@@ -35,6 +35,9 @@ r_packages:
 before_install:
   - mkdir -p ~/.R; echo 'PKG_CXXFLAGS := ${PKG_CXXFLAGS} -Wall -Wextra -pedantic -Werror' > ~/.R/Makevars
 
+install:
+  - R -e "0" --args --bootstrap-packrat
+  
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
