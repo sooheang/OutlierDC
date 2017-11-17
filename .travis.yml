@@ -24,6 +24,7 @@ r_packages:
   - survival
   - quantreg
   - Formula
+  - knitr
 
 before_install:
   - mkdir -p ~/.R; echo 'PKG_CXXFLAGS := ${PKG_CXXFLAGS} -Wall -Wextra -pedantic -Werror' > ~/.R/Makevars
