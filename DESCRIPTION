@@ -22,6 +22,5 @@ Imports:
   quantreg, 
   Formula 
 Maintainer: Soo-Heang Eo <eo.sooheang@gmail.com>
-VignetteBuilder: knitr
 License: GPL-3
 RoxygenNote: 6.0.1
