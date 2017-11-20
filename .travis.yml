@@ -1,29 +1,29 @@
-# Sample .travis.yml for R projects.
-#
-# See README.md for instructions, or for more configuration options,
-# see the wiki:
-#   https://github.com/craigcitro/r-travis/wiki
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
+# Header
 language: r
 sudo: false
 cache: packages
+latex: false
 
-repos:
-  CRAN: https://cloud.r-project.org
- 
+#env
+env:
+  global:
+  - _R_CHECK_FORCE_SUGGESTS_=false
+  - MAKEFLAGS="-j 2"
+
 include:
-  - r: release
-  - r: oldrel 
-  - r: devel
-
-r_packages:
-  - survival
-  - quantreg
-  - Formula
+- r: release
+- r: oldrel
+- r: devel
 
 before_install:
-  - mkdir -p ~/.R; echo 'PKG_CXXFLAGS := ${PKG_CXXFLAGS} -Wall -Wextra -pedantic -Werror' > ~/.R/Makevars
+- mkdir -p ~/.R; echo 'PKG_CXXFLAGS := ${PKG_CXXFLAGS} -Wall -Wextra -pedantic -Werror' > ~/.R/Makevars
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+- Rscript -e 'covr::codecov()'
+
+
+
+
 
