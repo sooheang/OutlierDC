@@ -1,29 +1,11 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-
-# Header
-language: r
+language: R
 sudo: false
 cache: packages
-latex: false
 
-#env
-env:
-  global:
-  - _R_CHECK_FORCE_SUGGESTS_=false
-  - MAKEFLAGS="-j 2"
-
-include:
-- r: release
-- r: oldrel
-- r: devel
-
-before_install:
-- mkdir -p ~/.R; echo 'PKG_CXXFLAGS := ${PKG_CXXFLAGS} -Wall -Wextra -pedantic -Werror' > ~/.R/Makevars
-
+r_packages:
+  - survival
+  - quantreg
+  - Formula
+  
 after_success:
-- Rscript -e 'covr::codecov()'
-
-
-
-
-
+  - Rscript -e 'covr::codecov()'
